@@ -13,12 +13,13 @@
       <div class="price">Price: {{ transaction.price }}</div>
     </div>
   </div>
-  <div class="" v-else-if="error">{{ error.message }}</div>
+  <div class="" v-else-if="error">{{ error }}</div>
   <div v-else>Loading Transaction...</div>
 </template>
 
 <script>
-import useTransactions from "../uses/fetchTransactions";
+import { useStore } from "vuex";
+import { computed } from "vue";
 export default {
   // data() {
   //   return {
@@ -31,8 +32,13 @@ export default {
   //   });
   // },
   setup() {
-    const { transactions, error, fetchAll } = useTransactions();
-    fetchAll();
+    const store = useStore();
+    store.dispatch("fetchAllTransaction");
+
+    const transactions = computed(() => store.state.transactions);
+
+    const error = computed(() => store.state.error);
+
     return { transactions, error };
   },
 };
